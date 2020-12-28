@@ -28,9 +28,7 @@ Examples of What's In Here
 
 Documentation
 =============
-See the docstrings and comments in the code.  
-
-Obviously you'll need to change the paths in the configuration file ``config.ini`` to locations on your own PC.
+See the docstrings and comments in the code.  WARNING: Documentation is a work in progress.
 
 
 License
