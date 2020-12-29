@@ -3,6 +3,15 @@ import os
 import re
 from pathlib import Path
 
+"""
+Zim Table Example
+
+    | FieldName<| FieldType<|
+    |:----------|:----------|
+    | Test1     | Text      |
+    | Test2     | Number    |
+
+"""
 config = configparser.ConfigParser()
 
 config.read("config.ini")
@@ -80,16 +89,5 @@ class ZimPage:
         print(f"Page saved to: \n{str(Path(self.parent, self.filename))}")
             
 
-my_page = ZimPage()
-
-my_page.read_page(r"D:\OneDrive\Rob\_TO BE FILED\Lifeline\TXT\2018-01-01_Sarasota_and_conversation_wit.txt")
-
-my_page.title = "2018-01-01-0000 Sarasota Conversations"
-
-my_page.parent = Path(config["zimwiki"]["notebook"],"2018")
-
-my_page.strip_newlines()
-
-my_page.write_page()
 
 
