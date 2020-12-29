@@ -31,8 +31,8 @@ def set_src(src_path):
 
 
 
-class ZimPage(self, title):
-    def __init__(self):
+class ZimPage(object):
+    def __init__(self, title):
         self.title = title
         self.parent = nb # Default notebook path from config file
         self.filename = self.title.replace(" ","_") + ".txt"
@@ -77,16 +77,18 @@ class ZimPage(self, title):
         self.content = new_content
 
 
-    def linkify(self, page_path):
+    def linkify(self, page):
         """
         Create a page of links to all of the page's sub pages
         """
-        self.read_page(page_path)
+        self.read_page(page)
 
         self.content = ""
 
-        subpage_folder = Path(page_path).parent
+        page_path = Path(page)
 
+        subpage_folder = Path(page_path.parent,page_path.stem.replace("_"," "))
+        
         for item in subpage_folder.iterdir():
             if item.is_file:
                 item_title = item.stem.replace("_"," ")
