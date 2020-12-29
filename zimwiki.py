@@ -4,17 +4,11 @@ import re
 from pathlib import Path
 
 """
-Zim Table Example
-
-    | FieldName<| FieldType<|
-    |:----------|:----------|
-    | Test1     | Text      |
-    | Test2     | Number    |
-
+Zim sub page link example: [[+Add New License Log|Add New License Log]]
 """
 config = configparser.ConfigParser()
 
-config.read("config.ini")
+config.read(r"C:\Users\robf\Documents\Working\Python\RobsPythonTools\config.ini")
 
 nb = Path(config["zimwiki"]["notebook"])
 
@@ -36,15 +30,19 @@ def set_src(src_path):
     print(f"Source set to: {src_path}")
 
 
-class ZimPage:
+
+class ZimPage(self, title):
     def __init__(self):
-        self.title = None
-        self.parent = None
-        self.filename = None
-        self.content = None
-
-
+        self.title = title
+        self.parent = nb # Default notebook path from config file
+        self.filename = self.title.replace(" ","_") + ".txt"
+        self.content = "\n"
+        
     def read_page(self, page):
+        """
+        Replaces title and content with the title and content from
+        an existing page.
+        """
         with open(page,"r",encoding="utf-8") as p:
             self.content = p.read()
         
@@ -63,6 +61,7 @@ class ZimPage:
 
 
     def strip_newlines(self):
+
         # eliminate newlines, except those between paragraphs
         self.content = self.content.replace("\xa0","").split("\n")
 
@@ -78,8 +77,28 @@ class ZimPage:
         self.content = new_content
 
 
+    def linkify(self, page_path):
+        """
+        Create a page of links to all of the page's sub pages
+        """
+        self.read_page(page_path)
+
+        self.content = ""
+
+        subpage_folder = Path(page_path).parent
+
+        for item in subpage_folder.iterdir():
+            if item.is_file:
+                item_title = item.stem.replace("_"," ")
+                
+                item_link = f"[[+{item_title}|{item_title}]]\n"
+
+                self.content += item_link
+
+        self.write_page()
+
     def write_page(self):
-        # Be sure to set .parent and .filename before calling write_page
+
         # File name is always derived from the title when writing page
         self.filename = self.title.replace(" ","_") + ".txt"
 
