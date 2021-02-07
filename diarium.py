@@ -1,21 +1,5 @@
 from pathlib import Path
-from time_tools import date_fixer
-import os
 import shutil
-import configparser
-from msgbox import MsgBox 
-
-config = configparser.ConfigParser()
-
-config_file = "config.ini"
-
-config.read(config_file)
-
-inbox = Path(config["diarium"]["inbox"])
-
-diarium_folder = Path(list(inbox.iterdir())[0])
-
-zim_dest = Path(config["zimwiki"]["notebook"],"2021")
 
 def diarium_entry(entry_folder, dest_folder):
     # converts a Diarium entry to a Zim page, including attachments.
@@ -76,6 +60,4 @@ def diarium_to_zim(diarium_folder,zim_dest):
     # diarium_folder and zim_dest are path objects
     for entry_folder in diarium_folder.iterdir():
         diarium_entry(entry_folder, zim_dest)
-
-diarium_to_zim(diarium_folder, zim_dest)
 
