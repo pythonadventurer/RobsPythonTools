@@ -3,9 +3,12 @@ import os
 import re
 from pathlib import Path
 
+"""
+Zim sub page link example: [[+Add New License Log|Add New License Log]]
+"""
 config = configparser.ConfigParser()
 
-config.read("config.ini")
+config.read(r"C:\Users\robf\Documents\Working\Python\RobsPythonTools\config.ini")
 
 nb = Path(config["zimwiki"]["notebook"])
 
@@ -27,15 +30,19 @@ def set_src(src_path):
     print(f"Source set to: {src_path}")
 
 
-class ZimPage:
-    def __init__(self):
-        self.title = None
-        self.parent = None
-        self.filename = None
-        self.content = None
 
-
+class ZimPage(object):
+    def __init__(self, title):
+        self.title = title
+        self.parent = nb # Default notebook path from config file
+        self.filename = self.title.replace(" ","_") + ".txt"
+        self.content = "\n"
+        
     def read_page(self, page):
+        """
+        Replaces title and content with the title and content from
+        an existing page.
+        """
         with open(page,"r",encoding="utf-8") as p:
             self.content = p.read()
         
@@ -54,6 +61,7 @@ class ZimPage:
 
 
     def strip_newlines(self):
+
         # eliminate newlines, except those between paragraphs
         self.content = self.content.replace("\xa0","").split("\n")
 
@@ -69,8 +77,30 @@ class ZimPage:
         self.content = new_content
 
 
+    def linkify(self, page):
+        """
+        Create a page of links to all of the page's sub pages
+        """
+        self.read_page(page)
+
+        self.content = ""
+
+        page_path = Path(page)
+
+        subpage_folder = Path(page_path.parent,page_path.stem.replace("_"," "))
+        
+        for item in subpage_folder.iterdir():
+            if item.is_file:
+                item_title = item.stem.replace("_"," ")
+                
+                item_link = f"[[+{item_title}|{item_title}]]\n"
+
+                self.content += item_link
+
+        self.write_page()
+
     def write_page(self):
-        # Be sure to set .parent and .filename before calling write_page
+
         # File name is always derived from the title when writing page
         self.filename = self.title.replace(" ","_") + ".txt"
 
@@ -80,16 +110,5 @@ class ZimPage:
         print(f"Page saved to: \n{str(Path(self.parent, self.filename))}")
             
 
-my_page = ZimPage()
-
-my_page.read_page(r"D:\OneDrive\Rob\_TO BE FILED\Lifeline\TXT\2018-01-01_Sarasota_and_conversation_wit.txt")
-
-my_page.title = "2018-01-01-0000 Sarasota Conversations"
-
-my_page.parent = Path(config["zimwiki"]["notebook"],"2018")
-
-my_page.strip_newlines()
-
-my_page.write_page()
 
 
