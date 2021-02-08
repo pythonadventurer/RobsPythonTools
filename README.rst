@@ -21,6 +21,7 @@ Examples of What's In Here
 * Extract eBay Active Listings data from locally saved "Webpage Complete" to a CSV file.  Ultimate destination: a Microsoft Access inventory database.
 * Convert downloaded PayPal transactions to a CSV file that can be easily imported into GnuCash, with correct accounts.
 * A nice little Message Box feature, that can be used to pop up and inform the user that a task is complete.  Does not require use of Tkinter or any other GUI tool.
+* Code to convert diary entries exported from the Diarium app into Zim Wiki.
 * Time Tools, a module packed with useful functions for working with dates and times. 
 
 ..and more.
